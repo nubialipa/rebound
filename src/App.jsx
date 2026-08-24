@@ -3,6 +3,7 @@ import { load, save, isStorageAvailable } from './lib/storage.js';
 import { createActivityLog, createStageChange } from './lib/recovery.js';
 import { stageHasHeadImpactRisk } from './data/stages.js';
 import { getDictionary } from './lib/i18n.js';
+import { createSampleState } from './data/sampleRecovery.js';
 import Onboarding from './screens/Onboarding.jsx';
 import Today from './screens/Today.jsx';
 import SymptomCheck from './screens/SymptomCheck.jsx';
@@ -23,9 +24,21 @@ export default function App() {
   function update(changes) {
     setState((current) => {
       const next = typeof changes === 'function' ? changes(current) : { ...current, ...changes };
-      save(next);
+      // Sample data is never written to storage, so exploring it cannot
+      // overwrite someone's real record.
+      if (!next.isSample) save(next);
       return next;
     });
+  }
+
+  function enterSample() {
+    setState({ ...createSampleState(), language });
+    setScreen('today');
+  }
+
+  function exitSample() {
+    setState(load());
+    setScreen('today');
   }
 
   function handleLanguageChange(code) {
@@ -40,12 +53,13 @@ export default function App() {
     });
   }
 
-  function handleSaveLog({ activity, symptomsBefore, symptomsAfter }) {
+  function handleSaveLog({ activity, symptomsBefore, symptomsAfter, note }) {
     const log = createActivityLog({
       stage: state.currentStage,
       activity,
       symptomsBefore,
       symptomsAfter,
+      note,
     });
     update((current) => ({
       ...current,
@@ -77,6 +91,7 @@ export default function App() {
           language={language}
           onLanguageChange={handleLanguageChange}
           onStart={handleStart}
+          onExploreSample={enterSample}
           storageAvailable={storageAvailable}
         />
       </main>
@@ -85,6 +100,15 @@ export default function App() {
 
   return (
     <main className="shell">
+      {state.isSample && (
+        <div className="sample-banner">
+          <span>{t.sample.banner}</span>
+          <button type="button" className="sample-exit" onClick={exitSample}>
+            {t.sample.exit}
+          </button>
+        </div>
+      )}
+
       {screen === 'today' && (
         <Today
           state={state}

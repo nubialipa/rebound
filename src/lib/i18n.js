@@ -26,17 +26,30 @@ const en = {
     storageTitle: 'Storage is unavailable',
     storageBody:
       'This browser is blocking local storage, so nothing you enter will be saved. Private browsing is the usual cause. You can still look around.',
+    howTitle: 'How it works',
+    howSteps: [
+      ['Log an activity', 'Write down what you did — a walk, a half day at work.'],
+      ['Rate six symptoms', 'Once before the activity, once after. A slider from 0 to 10.'],
+      ['Bring it to your appointment', 'Rebound turns your logs into a summary you can copy and show.'],
+    ],
+    howDaily: 'A minute a day. Nothing to install, nothing to sign up for.',
     dateLabel: 'When did your recovery start?',
     dateHelp:
       'Used to count the days in your record. Days are tracked, not used to determine progression.',
     consent:
       'I understand Rebound is a self-tracking tool and does not provide medical clearance.',
     start: 'Start my record',
+    exploreSample: 'Or explore a sample recovery',
     privacy:
       'Your recovery logs stay on this device. Rebound has no account and does not upload your recovery data to a server.',
     errorDate: 'Choose the date your recovery started.',
     errorFuture: 'That date is in the future. Choose today or an earlier date.',
     errorConsent: 'Read and confirm the note above before starting.',
+  },
+
+  sample: {
+    banner: 'Sample recovery — fictional data, not a real record',
+    exit: 'Exit sample',
   },
 
   today: {
@@ -47,6 +60,12 @@ const en = {
       `Recovery day ${n}. Days are tracked, not used to determine progression.`,
     lastLogged: 'Last logged',
     noneYet: 'Nothing logged yet. Your first entry starts the record.',
+    emptyTitle: 'Your recovery record starts here',
+    emptySteps: [
+      'Tap “Log today’s activity” above.',
+      'Write what you did, then rate six symptoms before and after.',
+      'Come back tomorrow. After a few days you will have something to show your healthcare professional.',
+    ],
     noChange: 'No symptom scores changed after this activity.',
     symptomChange: 'Symptom change',
     changeStage: 'Change stage',
@@ -63,6 +82,12 @@ const en = {
     before: 'Before this activity',
     after: 'After this activity',
     scaleHelp: '0 is none, 10 is the most severe you can imagine.',
+    scaleAnchors: ['0 none', '1–3 mild', '4–6 moderate', '7–9 severe', '10 worst'],
+    scaleGuide: 'Rough guide, not a test: mild means you notice it but carry on, moderate means it interferes with what you are doing, severe means you have to stop. Use the same judgement each time — what matters is the change from before to after, not the exact number.',
+    scaleValue: (n) => (n === 0 ? 'none' : n <= 3 ? 'mild' : n <= 6 ? 'moderate' : n <= 9 ? 'severe' : 'worst'),
+    noteLabel: 'What did you notice? (optional)',
+    notePlaceholder: 'e.g. dizzy about four minutes in, had to sit down',
+    noteHelp: 'Anything the numbers do not capture. Your words, not an assessment.',
     continue: 'Continue',
     save: 'Save log',
     cancel: 'Cancel',
@@ -99,6 +124,7 @@ const en = {
       'A record of what you logged, most recent first. This is a record — it is not an assessment of your recovery.',
     empty: 'Nothing logged yet.',
     noChange: 'No symptom scores changed after this activity.',
+    note: 'Note',
     movedTo: 'Moved to Stage',
     movedBack: 'Moved back to Stage',
     from: 'From Stage',
@@ -140,6 +166,7 @@ const en = {
     plainRecentHeading: 'MOST RECENT ACTIVITY — STAGE',
     plainScaleLine: 'Symptom scores, scale 0–10, before → after',
     plainChanged: 'Changed',
+    plainNote: 'Note',
     plainNoChange: 'No symptom scores changed after this activity.',
     plainQuestions: 'QUESTIONS TO DISCUSS',
     plainFooter: [
@@ -208,17 +235,30 @@ const id = {
     storageTitle: 'Penyimpanan tidak tersedia',
     storageBody:
       'Peramban ini memblokir penyimpanan lokal, jadi apa pun yang Anda isi tidak akan tersimpan. Biasanya ini terjadi pada mode penyamaran. Anda tetap bisa melihat-lihat.',
+    howTitle: 'Cara memakainya',
+    howSteps: [
+      ['Catat aktivitas', 'Tulis apa yang Anda lakukan — jalan kaki, setengah hari bekerja.'],
+      ['Nilai enam gejala', 'Sekali sebelum aktivitas, sekali sesudah. Geser dari 0 sampai 10.'],
+      ['Bawa ke ruang konsultasi', 'Rebound mengubah catatan Anda jadi ringkasan yang bisa disalin dan ditunjukkan.'],
+    ],
+    howDaily: 'Semenit sehari. Tidak perlu instal, tidak perlu daftar.',
     dateLabel: 'Kapan pemulihan Anda dimulai?',
     dateHelp:
       'Dipakai untuk menghitung hari dalam catatan Anda. Hari dicatat, bukan dipakai untuk menentukan tahap.',
     consent:
       'Saya paham Rebound adalah alat pencatatan mandiri dan tidak memberikan izin medis.',
     start: 'Mulai catatan saya',
+    exploreSample: 'Atau lihat contoh catatan pemulihan',
     privacy:
       'Catatan pemulihan Anda tersimpan di perangkat ini. Rebound tidak memakai akun dan tidak mengunggah data pemulihan Anda ke server.',
     errorDate: 'Pilih tanggal saat pemulihan Anda dimulai.',
     errorFuture: 'Tanggal itu di masa depan. Pilih hari ini atau tanggal sebelumnya.',
     errorConsent: 'Baca dan setujui catatan di atas sebelum memulai.',
+  },
+
+  sample: {
+    banner: 'Contoh catatan pemulihan — data fiktif, bukan catatan nyata',
+    exit: 'Keluar dari contoh',
   },
 
   today: {
@@ -229,6 +269,12 @@ const id = {
       `Hari pemulihan ke-${n}. Hari dicatat, bukan dipakai untuk menentukan tahap.`,
     lastLogged: 'Catatan terakhir',
     noneYet: 'Belum ada catatan. Entri pertama Anda memulai rekamannya.',
+    emptyTitle: 'Catatan pemulihan Anda dimulai di sini',
+    emptySteps: [
+      'Tekan “Catat aktivitas hari ini” di atas.',
+      'Tulis apa yang Anda lakukan, lalu nilai enam gejala sebelum dan sesudah.',
+      'Kembali lagi besok. Setelah beberapa hari, Anda punya sesuatu untuk ditunjukkan ke tenaga kesehatan.',
+    ],
     noChange: 'Tidak ada skor gejala yang berubah setelah aktivitas ini.',
     symptomChange: 'Perubahan gejala',
     changeStage: 'Ubah tahap',
@@ -245,6 +291,12 @@ const id = {
     before: 'Sebelum aktivitas ini',
     after: 'Sesudah aktivitas ini',
     scaleHelp: '0 berarti tidak ada, 10 berarti separah yang bisa Anda bayangkan.',
+    scaleAnchors: ['0 tidak ada', '1–3 ringan', '4–6 sedang', '7–9 berat', '10 terparah'],
+    scaleGuide: 'Panduan kasar, bukan tes: ringan berarti terasa tapi Anda tetap bisa lanjut, sedang berarti mengganggu apa yang sedang Anda kerjakan, berat berarti Anda harus berhenti. Pakai ukuran yang sama setiap kali — yang penting adalah perubahannya dari sebelum ke sesudah, bukan angka persisnya.',
+    scaleValue: (n) => (n === 0 ? 'tidak ada' : n <= 3 ? 'ringan' : n <= 6 ? 'sedang' : n <= 9 ? 'berat' : 'terparah'),
+    noteLabel: 'Apa yang Anda rasakan? (opsional)',
+    notePlaceholder: 'mis. pusing sekitar menit keempat, harus duduk',
+    noteHelp: 'Hal yang tidak tertangkap oleh angka. Kata-kata Anda sendiri, bukan penilaian.',
     continue: 'Lanjut',
     save: 'Simpan catatan',
     cancel: 'Batal',
@@ -281,6 +333,7 @@ const id = {
       'Rekaman apa yang Anda catat, terbaru di atas. Ini adalah catatan — bukan penilaian atas pemulihan Anda.',
     empty: 'Belum ada catatan.',
     noChange: 'Tidak ada skor gejala yang berubah setelah aktivitas ini.',
+    note: 'Catatan',
     movedTo: 'Pindah ke Tahap',
     movedBack: 'Kembali ke Tahap',
     from: 'Dari Tahap',
@@ -322,6 +375,7 @@ const id = {
     plainRecentHeading: 'AKTIVITAS TERAKHIR — TAHAP',
     plainScaleLine: 'Skor gejala, skala 0–10, sebelum → sesudah',
     plainChanged: 'Berubah',
+    plainNote: 'Catatan',
     plainNoChange: 'Tidak ada skor gejala yang berubah setelah aktivitas ini.',
     plainQuestions: 'PERTANYAAN UNTUK DIDISKUSIKAN',
     plainFooter: [

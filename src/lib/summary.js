@@ -51,6 +51,7 @@ export function buildSummary(state, language = 'en') {
   } else {
     stageLogs.slice(-5).forEach((log) => {
       lines.push(`${log.date} — ${log.activity}`);
+      if (log.note) lines.push(`    ${t.summary.plainNote}: ${log.note}`);
     });
   }
   lines.push('');
@@ -58,6 +59,7 @@ export function buildSummary(state, language = 'en') {
   if (latest?.symptomsBefore && latest?.symptomsAfter) {
     lines.push(`${t.summary.plainRecentHeading} ${latest.stage}`);
     lines.push(`${latest.date} — ${latest.activity}`);
+    if (latest.note) lines.push(`${t.summary.plainNote}: ${latest.note}`);
     lines.push(t.summary.plainScaleLine);
     const width = symptomColumnWidth(t);
     SYMPTOMS.forEach((symptom) => {

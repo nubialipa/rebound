@@ -3,7 +3,14 @@ import { FRAMEWORK } from '../data/stages.js';
 import { todayISO } from '../lib/recovery.js';
 import LanguageToggle from '../components/LanguageToggle.jsx';
 
-export default function Onboarding({ t, language, onLanguageChange, onStart, storageAvailable }) {
+export default function Onboarding({
+  t,
+  language,
+  onLanguageChange,
+  onStart,
+  onExploreSample,
+  storageAvailable,
+}) {
   const [startDate, setStartDate] = useState(todayISO());
   const [acknowledged, setAcknowledged] = useState(false);
   const [error, setError] = useState('');
@@ -60,6 +67,22 @@ export default function Onboarding({ t, language, onLanguageChange, onStart, sto
         </p>
       </div>
 
+      <div className="stack-sm">
+        <h3 style={{ fontSize: 'var(--step-0)' }}>{t.onboarding.howTitle}</h3>
+        <ol className="how-list">
+          {t.onboarding.howSteps.map(([title, detail], index) => (
+            <li key={title} className="how-item">
+              <span className="how-number">{index + 1}</span>
+              <span>
+                <span className="how-title">{title}</span>
+                <span className="how-detail">{detail}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="fine">{t.onboarding.howDaily}</p>
+      </div>
+
       {!storageAvailable && (
         <div className="card stack-sm">
           <h3>{t.onboarding.storageTitle}</h3>
@@ -105,6 +128,12 @@ export default function Onboarding({ t, language, onLanguageChange, onStart, sto
         <button type="button" className="button button-full" onClick={handleStart}>
           {t.onboarding.start}
         </button>
+
+        <p className="fine" style={{ textAlign: 'center', margin: 0 }}>
+          <button type="button" className="link-button" onClick={onExploreSample}>
+            {t.onboarding.exploreSample}
+          </button>
+        </p>
       </div>
 
       <p className="fine">{t.onboarding.privacy}</p>

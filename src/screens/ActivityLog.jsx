@@ -51,6 +51,12 @@ function ActivityEntry({ entry, t }) {
         </p>
       </div>
 
+      {entry.note ? (
+        <p className="fine" style={{ margin: 0, fontStyle: 'italic' }}>
+          {t.activityLog.note}: {entry.note}
+        </p>
+      ) : null}
+
       {changed.length === 0 ? (
         <p className="fine" style={{ margin: 0 }}>
           {t.activityLog.noChange}

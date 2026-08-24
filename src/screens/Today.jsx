@@ -58,7 +58,9 @@ export default function Today({
       </div>
 
       <div className="stack-sm">
-        <h3 style={{ fontSize: 'var(--step-0)' }}>{t.today.lastLogged}</h3>
+        <h3 style={{ fontSize: 'var(--step-0)' }}>
+          {latest ? t.today.lastLogged : t.today.emptyTitle}
+        </h3>
         {latest ? (
           <div className="card stack-sm">
             <p className="muted">
@@ -73,7 +75,18 @@ export default function Today({
             </p>
           </div>
         ) : (
-          <p className="muted">{t.today.noneYet}</p>
+          <div className="card">
+            <ol className="how-list">
+              {t.today.emptySteps.map((step, index) => (
+                <li key={step} className="how-item">
+                  <span className="how-number">{index + 1}</span>
+                  <span className="how-detail" style={{ marginTop: 0 }}>
+                    {step}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
         )}
       </div>
 

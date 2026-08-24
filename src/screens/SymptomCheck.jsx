@@ -9,6 +9,7 @@ export default function SymptomCheck({ t, onComplete, onCancel }) {
   const [activity, setActivity] = useState('');
   const [symptomsBefore, setSymptomsBefore] = useState(createEmptySymptomSet);
   const [symptomsAfter, setSymptomsAfter] = useState(createEmptySymptomSet);
+  const [note, setNote] = useState('');
   const [error, setError] = useState('');
 
   const stepIndex = STEPS.indexOf(step);
@@ -27,7 +28,7 @@ export default function SymptomCheck({ t, onComplete, onCancel }) {
       setStep('after');
       return;
     }
-    onComplete({ activity: activity.trim(), symptomsBefore, symptomsAfter });
+    onComplete({ activity: activity.trim(), symptomsBefore, symptomsAfter, note: note.trim() });
   }
 
   function goBack() {
@@ -80,12 +81,31 @@ export default function SymptomCheck({ t, onComplete, onCancel }) {
       )}
 
       {step === 'after' && (
-        <SymptomSliders
-          t={t}
-          title={t.symptomCheck.after}
-          values={symptomsAfter}
-          onChange={setSymptomsAfter}
-        />
+        <>
+          <SymptomSliders
+            t={t}
+            title={t.symptomCheck.after}
+            values={symptomsAfter}
+            onChange={setSymptomsAfter}
+          />
+
+          <div className="card stack-sm">
+            <label className="label" htmlFor="activity-note">
+              {t.symptomCheck.noteLabel}
+            </label>
+            <input
+              id="activity-note"
+              className="field"
+              type="text"
+              placeholder={t.symptomCheck.notePlaceholder}
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+            />
+            <p className="fine" style={{ margin: 0 }}>
+              {t.symptomCheck.noteHelp}
+            </p>
+          </div>
+        </>
       )}
 
       <div className="stack-sm">
@@ -111,6 +131,14 @@ function SymptomSliders({ t, title, values, onChange }) {
       <p className="fine" style={{ marginTop: '-0.5rem' }}>
         {t.symptomCheck.scaleHelp}
       </p>
+      <div className="scale-anchors">
+        {t.symptomCheck.scaleAnchors.map((anchor) => (
+          <span key={anchor}>{anchor}</span>
+        ))}
+      </div>
+      <p className="fine" style={{ marginTop: 0 }}>
+        {t.symptomCheck.scaleGuide}
+      </p>
       <div className="stack">
         {SYMPTOMS.map((symptom) => (
           <div key={symptom.key}>
@@ -120,6 +148,9 @@ function SymptomSliders({ t, title, values, onChange }) {
               </label>
               <span className="muted" style={{ fontVariantNumeric: 'tabular-nums' }}>
                 {values[symptom.key]}
+                <span className="fine" style={{ marginLeft: '0.5rem' }}>
+                  {t.symptomCheck.scaleValue(values[symptom.key])}
+                </span>
               </span>
             </div>
             <input

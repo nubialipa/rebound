@@ -72,6 +72,11 @@ export default function DoctorSummary({ state, t, language, onBack }) {
               <p className="fine" style={{ marginTop: '0.25rem' }}>
                 {latest.date} · {latest.activity} · {t.summary.scaleNote}
               </p>
+              {latest.note ? (
+                <p className="muted" style={{ marginTop: '0.5rem', fontStyle: 'italic' }}>
+                  {t.activityLog.note}: {latest.note}
+                </p>
+              ) : null}
               <div className="stack-sm" style={{ marginTop: '0.5rem' }}>
                 {SYMPTOMS.map((symptom) => {
                   const before = latest.symptomsBefore[symptom.key];

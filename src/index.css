@@ -261,6 +261,111 @@ a {
   }
 }
 
+.scale-anchors {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  color: var(--ink-faint);
+  font-size: var(--step--2);
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Numbered guidance steps — used in onboarding and the empty Today state.
+   Plain list, no icons, no animation: readable with brain fog. */
+
+.how-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.how-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.how-item + .how-item {
+  margin-top: 0.875rem;
+}
+
+.how-number {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--accent-wash);
+  color: var(--accent);
+  font-size: var(--step--2);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+}
+
+.how-title {
+  display: block;
+  font-weight: 500;
+  font-size: var(--step--1);
+}
+
+.how-detail {
+  display: block;
+  margin-top: 0.125rem;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+/* Sample mode banner */
+
+.sample-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: var(--accent-wash);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.625rem 0.875rem;
+  margin-bottom: 2rem;
+  font-size: var(--step--2);
+  color: var(--ink-soft);
+}
+
+.sample-exit {
+  font: inherit;
+  font-weight: 500;
+  color: var(--accent);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-button {
+  font: inherit;
+  color: var(--accent);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sample-exit:focus-visible,
+.link-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* Language toggle */
 
 .header-row {

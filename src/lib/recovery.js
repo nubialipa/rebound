@@ -27,7 +27,7 @@ export function recoveryDay(recoveryStartDate, today = todayISO()) {
   return Math.floor((now - start) / DAY_MS) + 1;
 }
 
-export function createActivityLog({ stage, activity, symptomsBefore, symptomsAfter, date = todayISO() }) {
+export function createActivityLog({ stage, activity, symptomsBefore, symptomsAfter, note = '', date = todayISO() }) {
   return {
     id: `activity-${Date.now()}`,
     type: 'activity',
@@ -35,6 +35,7 @@ export function createActivityLog({ stage, activity, symptomsBefore, symptomsAft
     recordedAt: new Date().toISOString(),
     stage,
     activity,
+    note,
     symptomsBefore,
     symptomsAfter,
     symptomChanges: calculateSymptomChanges(symptomsBefore, symptomsAfter),
@@ -56,7 +57,12 @@ export function createStageChange({ from, to, note = '', date = todayISO() }) {
 
 export function getLatestActivityLog(state) {
   if (!state.activityLogs?.length) return null;
-  return state.activityLogs[state.activityLogs.length - 1];
+  // By the day it happened, not by insertion order — someone can log an
+  // activity for yesterday, and that must not become "most recent".
+  return state.activityLogs.reduce((latest, log) => {
+    if (log.date !== latest.date) return log.date > latest.date ? log : latest;
+    return new Date(log.recordedAt) > new Date(latest.recordedAt) ? log : latest;
+  });
 }
 
 export function getLatestStageChange(state) {
