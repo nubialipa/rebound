@@ -6,7 +6,7 @@ Rebound is a self-tracking companion for concussion recovery. It records what yo
 
 [Live demo](https://rebound-nu.vercel.app) · Built for Hack for Humanity Summer 2026
 
----
+![Rebound](screenshot.PNG)
 
 ## The problem
 
