@@ -2,7 +2,14 @@ import { getStage } from '../data/stages.js';
 import { recoveryDay, getLatestActivityLog } from '../lib/recovery.js';
 import { listChangedSymptoms, formatDelta } from '../lib/symptoms.js';
 
-export default function Today({ state, onLogActivity, onOpenJourney, onOpenSummary }) {
+export default function Today({
+  state,
+  onLogActivity,
+  onChangeStage,
+  onOpenActivityLog,
+  onOpenJourney,
+  onOpenSummary,
+}) {
   const stage = getStage(state.currentStage);
   const day = recoveryDay(state.recoveryStartDate);
   const latest = getLatestActivityLog(state);
@@ -63,6 +70,12 @@ export default function Today({ state, onLogActivity, onOpenJourney, onOpenSumma
       </div>
 
       <div className="stack-sm">
+        <button type="button" className="button button-quiet button-full" onClick={onChangeStage}>
+          Change stage
+        </button>
+        <button type="button" className="button button-quiet button-full" onClick={onOpenActivityLog}>
+          View activity log
+        </button>
         <button type="button" className="button button-quiet button-full" onClick={onOpenJourney}>
           View recovery journey
         </button>

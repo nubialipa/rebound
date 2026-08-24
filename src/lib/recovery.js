@@ -71,8 +71,11 @@ export function getLogsForStage(state, stage) {
 // Merged, newest-first view for the activity log screen. Stage changes appear
 // inline so the record reads as a continuous story, including the moves back.
 export function getTimeline(state) {
-  return [...(state.activityLogs ?? []), ...(state.stageChanges ?? [])]
-    .sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
+  return [...(state.activityLogs ?? []), ...(state.stageChanges ?? [])].sort((a, b) => {
+    // Order by the day the thing happened, not the moment it was typed in.
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return new Date(b.recordedAt) - new Date(a.recordedAt);
+  });
 }
 
 // Reports elapsed time since the last stage change. This is context printed on

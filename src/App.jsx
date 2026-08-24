@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { load, save, isStorageAvailable } from './lib/storage.js';
-import { createActivityLog } from './lib/recovery.js';
+import { createActivityLog, createStageChange } from './lib/recovery.js';
+import { stageHasHeadImpactRisk } from './data/stages.js';
 import Onboarding from './screens/Onboarding.jsx';
 import Today from './screens/Today.jsx';
 import SymptomCheck from './screens/SymptomCheck.jsx';
+import StageChange from './screens/StageChange.jsx';
+import ActivityLog from './screens/ActivityLog.jsx';
+import RecoveryJourney from './screens/RecoveryJourney.jsx';
+import DoctorSummary from './screens/DoctorSummary.jsx';
 
 const storageAvailable = isStorageAvailable();
 
@@ -41,6 +46,20 @@ export default function App() {
     setScreen('today');
   }
 
+  function handleStageChange({ from, to, note }) {
+    const change = createStageChange({ from, to, note });
+    update((current) => ({
+      ...current,
+      currentStage: to,
+      contactClearanceConfirmed:
+        stageHasHeadImpactRisk(to) ? true : current.contactClearanceConfirmed,
+      stageChanges: [...current.stageChanges, change],
+    }));
+    setScreen('today');
+  }
+
+  const goToday = () => setScreen('today');
+
   if (!state.onboardingAcknowledged) {
     return (
       <main className="shell">
@@ -55,35 +74,24 @@ export default function App() {
         <Today
           state={state}
           onLogActivity={() => setScreen('log')}
+          onChangeStage={() => setScreen('stage')}
+          onOpenActivityLog={() => setScreen('activityLog')}
           onOpenJourney={() => setScreen('journey')}
           onOpenSummary={() => setScreen('summary')}
         />
       )}
 
-      {screen === 'log' && (
-        <SymptomCheck onComplete={handleSaveLog} onCancel={() => setScreen('today')} />
+      {screen === 'log' && <SymptomCheck onComplete={handleSaveLog} onCancel={goToday} />}
+
+      {screen === 'stage' && (
+        <StageChange state={state} onConfirm={handleStageChange} onCancel={goToday} />
       )}
 
-      {screen === 'journey' && <Placeholder title="Recovery journey" onBack={() => setScreen('today')} />}
+      {screen === 'activityLog' && <ActivityLog state={state} onBack={goToday} />}
 
-      {screen === 'summary' && <Placeholder title="Doctor conversation summary" onBack={() => setScreen('today')} />}
+      {screen === 'journey' && <RecoveryJourney state={state} onBack={goToday} />}
+
+      {screen === 'summary' && <DoctorSummary state={state} onBack={goToday} />}
     </main>
-  );
-}
-
-// Temporary stand-in for the two screens landing next.
-function Placeholder({ title, onBack }) {
-  return (
-    <div className="stack-lg">
-      <header className="stack-sm">
-        <p className="wordmark">Rebound</p>
-        <p className="tagline">{title}</p>
-      </header>
-      <hr className="rule" />
-      <p className="muted">Coming next.</p>
-      <button type="button" className="button button-quiet" onClick={onBack}>
-        Back to today
-      </button>
-    </div>
   );
 }

@@ -16,6 +16,8 @@ const QUESTIONS = [
   'Which symptoms should I monitor most closely?',
 ];
 
+export { QUESTIONS };
+
 function formatSymptomLine(label, before, after, delta) {
   const padded = `${label}:`.padEnd(20, ' ');
   const change = delta === 0 ? '' : `   (${formatDelta(delta)})`;
@@ -48,7 +50,9 @@ export function buildSummary(state) {
   lines.push('');
 
   if (latest?.symptomsBefore && latest?.symptomsAfter) {
-    lines.push(`SYMPTOMS, MOST RECENT ACTIVITY (${latest.date}, scale 0–10)`);
+    lines.push(`MOST RECENT ACTIVITY — STAGE ${latest.stage}`);
+    lines.push(`${latest.date} — ${latest.activity}`);
+    lines.push('Symptom scores, scale 0–10, before → after');
     SYMPTOMS.forEach((symptom) => {
       lines.push(
         formatSymptomLine(
