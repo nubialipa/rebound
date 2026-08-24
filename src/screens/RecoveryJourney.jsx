@@ -1,19 +1,13 @@
 import { stageProgress } from '../lib/recovery.js';
 
-const STATUS_LABEL = {
-  current: 'Current',
-  logged: 'Logged',
-  'not-started': 'Not started',
-};
-
-export default function RecoveryJourney({ state, onBack }) {
+export default function RecoveryJourney({ state, t, onBack }) {
   const stages = stageProgress(state);
 
   return (
     <div className="stack-lg">
       <header className="stack-sm">
-        <p className="wordmark">Rebound</p>
-        <p className="tagline">Recovery journey</p>
+        <p className="wordmark">{t.wordmark}</p>
+        <p className="tagline">{t.journey.title}</p>
       </header>
 
       <hr className="rule" />
@@ -24,16 +18,17 @@ export default function RecoveryJourney({ state, onBack }) {
             <div className="stack-sm">
               <div>
                 <p style={{ margin: 0, fontWeight: 500 }}>
-                  Stage {stage.number} — {stage.name}
+                  {t.today.stageOf(stage.number).split(' ').slice(0, 2).join(' ')} —{' '}
+                  {t.stages[stage.number]?.name}
                 </p>
                 <p className="fine" style={{ margin: 0 }}>
-                  {STATUS_LABEL[stage.status]}
+                  {t.journey.status[stage.status]}
                 </p>
               </div>
 
               {stage.hasHeadImpactRisk && (
                 <p className="fine" style={{ margin: 0, color: 'var(--ink-soft)' }}>
-                  Requires clearance from your healthcare professional.
+                  {t.journey.needsClearance}
                 </p>
               )}
             </div>
@@ -41,10 +36,10 @@ export default function RecoveryJourney({ state, onBack }) {
         ))}
       </ol>
 
-      <p className="fine">Your timeline reflects your logs — not medical clearance.</p>
+      <p className="fine">{t.journey.footer}</p>
 
       <button type="button" className="button button-quiet" onClick={onBack}>
-        Back to today
+        {t.journey.back}
       </button>
     </div>
   );

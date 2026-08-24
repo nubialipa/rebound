@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { load, save, isStorageAvailable } from './lib/storage.js';
 import { createActivityLog, createStageChange } from './lib/recovery.js';
 import { stageHasHeadImpactRisk } from './data/stages.js';
+import { getDictionary } from './lib/i18n.js';
 import Onboarding from './screens/Onboarding.jsx';
 import Today from './screens/Today.jsx';
 import SymptomCheck from './screens/SymptomCheck.jsx';
@@ -16,12 +17,19 @@ export default function App() {
   const [state, setState] = useState(load);
   const [screen, setScreen] = useState('today');
 
+  const language = state.language ?? 'en';
+  const t = getDictionary(language);
+
   function update(changes) {
     setState((current) => {
       const next = typeof changes === 'function' ? changes(current) : { ...current, ...changes };
       save(next);
       return next;
     });
+  }
+
+  function handleLanguageChange(code) {
+    update({ language: code });
   }
 
   function handleStart({ startDate }) {
@@ -51,8 +59,9 @@ export default function App() {
     update((current) => ({
       ...current,
       currentStage: to,
-      contactClearanceConfirmed:
-        stageHasHeadImpactRisk(to) ? true : current.contactClearanceConfirmed,
+      contactClearanceConfirmed: stageHasHeadImpactRisk(to)
+        ? true
+        : current.contactClearanceConfirmed,
       stageChanges: [...current.stageChanges, change],
     }));
     setScreen('today');
@@ -63,7 +72,13 @@ export default function App() {
   if (!state.onboardingAcknowledged) {
     return (
       <main className="shell">
-        <Onboarding onStart={handleStart} storageAvailable={storageAvailable} />
+        <Onboarding
+          t={t}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          onStart={handleStart}
+          storageAvailable={storageAvailable}
+        />
       </main>
     );
   }
@@ -73,6 +88,9 @@ export default function App() {
       {screen === 'today' && (
         <Today
           state={state}
+          t={t}
+          language={language}
+          onLanguageChange={handleLanguageChange}
           onLogActivity={() => setScreen('log')}
           onChangeStage={() => setScreen('stage')}
           onOpenActivityLog={() => setScreen('activityLog')}
@@ -81,17 +99,19 @@ export default function App() {
         />
       )}
 
-      {screen === 'log' && <SymptomCheck onComplete={handleSaveLog} onCancel={goToday} />}
+      {screen === 'log' && <SymptomCheck t={t} onComplete={handleSaveLog} onCancel={goToday} />}
 
       {screen === 'stage' && (
-        <StageChange state={state} onConfirm={handleStageChange} onCancel={goToday} />
+        <StageChange state={state} t={t} onConfirm={handleStageChange} onCancel={goToday} />
       )}
 
-      {screen === 'activityLog' && <ActivityLog state={state} onBack={goToday} />}
+      {screen === 'activityLog' && <ActivityLog state={state} t={t} onBack={goToday} />}
 
-      {screen === 'journey' && <RecoveryJourney state={state} onBack={goToday} />}
+      {screen === 'journey' && <RecoveryJourney state={state} t={t} onBack={goToday} />}
 
-      {screen === 'summary' && <DoctorSummary state={state} onBack={goToday} />}
+      {screen === 'summary' && (
+        <DoctorSummary state={state} t={t} language={language} onBack={goToday} />
+      )}
     </main>
   );
 }

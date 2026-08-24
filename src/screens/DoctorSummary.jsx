@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { FRAMEWORK, SYMPTOMS, getStage } from '../data/stages.js';
+import { FRAMEWORK, SYMPTOMS } from '../data/stages.js';
 import { getLatestActivityLog, getLogsForStage, recoveryDay } from '../lib/recovery.js';
 import { formatDelta } from '../lib/symptoms.js';
-import { buildSummary, copySummary, QUESTIONS } from '../lib/summary.js';
+import { buildSummary, copySummary } from '../lib/summary.js';
 
-export default function DoctorSummary({ state, onBack }) {
+export default function DoctorSummary({ state, t, language, onBack }) {
   const [copyState, setCopyState] = useState('idle');
 
-  const stage = getStage(state.currentStage);
+  const stage = t.stages[state.currentStage];
   const day = recoveryDay(state.recoveryStartDate);
   const latest = getLatestActivityLog(state);
   const stageLogs = getLogsForStage(state, state.currentStage);
 
   async function handleCopy() {
-    const text = buildSummary(state);
+    const text = buildSummary(state, language);
     const ok = await copySummary(text);
     setCopyState(ok ? 'copied' : 'failed');
     setTimeout(() => setCopyState('idle'), 2000);
@@ -22,34 +22,35 @@ export default function DoctorSummary({ state, onBack }) {
   return (
     <div className="stack-lg">
       <header className="stack-sm">
-        <p className="wordmark">Rebound</p>
-        <p className="tagline">Doctor conversation summary</p>
+        <p className="wordmark">{t.wordmark}</p>
+        <p className="tagline">{t.summary.title}</p>
       </header>
 
       <hr className="rule" />
 
-      <p className="muted">
-        A record of what you logged, formatted to bring into a conversation with your
-        healthcare professional. It contains no assessment — only what you recorded.
-      </p>
+      <p className="muted">{t.summary.intro}</p>
 
       <div className="card stack">
         <div>
-          {day !== null && <p style={{ margin: 0 }}>Recovery day {day}</p>}
+          {day !== null && (
+            <p style={{ margin: 0 }}>
+              {t.summary.recoveryDay} {day}
+            </p>
+          )}
           <p style={{ margin: 0 }}>
-            Current stage: {state.currentStage} of 6 — {stage?.name}
+            {t.summary.currentStage}: {state.currentStage} {t.summary.of6} — {stage?.name}
           </p>
           <p className="fine" style={{ margin: 0 }}>
-            Framework: {FRAMEWORK.name}
+            {t.summary.framework}: {FRAMEWORK.name}
           </p>
         </div>
 
         <hr className="rule" />
 
         <div>
-          <h3 style={{ fontSize: 'var(--step-0)' }}>Activity at this stage</h3>
+          <h3 style={{ fontSize: 'var(--step-0)' }}>{t.summary.activityAtStage}</h3>
           {stageLogs.length === 0 ? (
-            <p className="fine">No activity recorded at this stage yet.</p>
+            <p className="fine">{t.summary.noActivity}</p>
           ) : (
             <div className="stack-sm" style={{ marginTop: '0.5rem' }}>
               {stageLogs.slice(-5).map((log) => (
@@ -66,10 +67,10 @@ export default function DoctorSummary({ state, onBack }) {
             <hr className="rule" />
             <div>
               <h3 style={{ fontSize: 'var(--step-0)' }}>
-                Most recent activity — Stage {latest.stage}
+                {t.summary.recentActivity} {latest.stage}
               </h3>
               <p className="fine" style={{ marginTop: '0.25rem' }}>
-                {latest.date} · {latest.activity} · scale 0–10, before → after.
+                {latest.date} · {latest.activity} · {t.summary.scaleNote}
               </p>
               <div className="stack-sm" style={{ marginTop: '0.5rem' }}>
                 {SYMPTOMS.map((symptom) => {
@@ -79,10 +80,10 @@ export default function DoctorSummary({ state, onBack }) {
                   return (
                     <div
                       key={symptom.key}
-                      style={{ display: 'flex', justifyContent: 'space-between' }}
+                      style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}
                     >
-                      <span className="muted">{symptom.label}</span>
-                      <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+                      <span className="muted">{t.symptoms[symptom.key]}</span>
+                      <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
                         {before} → {after}
                         {delta !== 0 ? ` (${formatDelta(delta)})` : ''}
                       </span>
@@ -97,9 +98,9 @@ export default function DoctorSummary({ state, onBack }) {
         <hr className="rule" />
 
         <div>
-          <h3 style={{ fontSize: 'var(--step-0)' }}>Questions to discuss</h3>
+          <h3 style={{ fontSize: 'var(--step-0)' }}>{t.summary.questionsTitle}</h3>
           <ul className="stack-sm" style={{ margin: '0.5rem 0 0', paddingLeft: '1.1rem' }}>
-            {QUESTIONS.map((question) => (
+            {t.summary.questions.map((question) => (
               <li key={question} className="muted">
                 {question}
               </li>
@@ -111,13 +112,13 @@ export default function DoctorSummary({ state, onBack }) {
       <div className="stack-sm">
         <button type="button" className="button button-full" onClick={handleCopy}>
           {copyState === 'copied'
-            ? 'Copied'
+            ? t.summary.copied
             : copyState === 'failed'
-              ? 'Could not copy — select the text manually'
-              : 'Copy summary'}
+              ? t.summary.copyFailed
+              : t.summary.copy}
         </button>
         <button type="button" className="button button-quiet button-full" onClick={onBack}>
-          Back to today
+          {t.summary.back}
         </button>
       </div>
     </div>

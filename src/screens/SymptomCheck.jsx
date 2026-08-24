@@ -4,7 +4,7 @@ import { createEmptySymptomSet, clampScore } from '../lib/symptoms.js';
 
 const STEPS = ['activity', 'before', 'after'];
 
-export default function SymptomCheck({ onComplete, onCancel }) {
+export default function SymptomCheck({ t, onComplete, onCancel }) {
   const [step, setStep] = useState('activity');
   const [activity, setActivity] = useState('');
   const [symptomsBefore, setSymptomsBefore] = useState(createEmptySymptomSet);
@@ -16,7 +16,7 @@ export default function SymptomCheck({ onComplete, onCancel }) {
   function goNext() {
     if (step === 'activity') {
       if (!activity.trim()) {
-        setError('Describe what you did, even briefly.');
+        setError(t.symptomCheck.errorActivity);
         return;
       }
       setError('');
@@ -42,10 +42,8 @@ export default function SymptomCheck({ onComplete, onCancel }) {
   return (
     <div className="stack-lg">
       <header className="stack-sm">
-        <p className="wordmark">Rebound</p>
-        <p className="tagline">
-          Step {stepIndex + 1} of {STEPS.length}
-        </p>
+        <p className="wordmark">{t.wordmark}</p>
+        <p className="tagline">{t.symptomCheck.step(stepIndex + 1, STEPS.length)}</p>
       </header>
 
       <hr className="rule" />
@@ -54,13 +52,13 @@ export default function SymptomCheck({ onComplete, onCancel }) {
         <div className="card stack">
           <div>
             <label className="label" htmlFor="activity-input">
-              What did you do today?
+              {t.symptomCheck.activityLabel}
             </label>
             <input
               id="activity-input"
               className="field"
               type="text"
-              placeholder="e.g. 15 min walking"
+              placeholder={t.symptomCheck.activityPlaceholder}
               value={activity}
               onChange={(event) => {
                 setActivity(event.target.value);
@@ -74,7 +72,8 @@ export default function SymptomCheck({ onComplete, onCancel }) {
 
       {step === 'before' && (
         <SymptomSliders
-          title="Before this activity"
+          t={t}
+          title={t.symptomCheck.before}
           values={symptomsBefore}
           onChange={setSymptomsBefore}
         />
@@ -82,7 +81,8 @@ export default function SymptomCheck({ onComplete, onCancel }) {
 
       {step === 'after' && (
         <SymptomSliders
-          title="After this activity"
+          t={t}
+          title={t.symptomCheck.after}
           values={symptomsAfter}
           onChange={setSymptomsAfter}
         />
@@ -90,17 +90,17 @@ export default function SymptomCheck({ onComplete, onCancel }) {
 
       <div className="stack-sm">
         <button type="button" className="button button-full" onClick={goNext}>
-          {step === 'after' ? 'Save log' : 'Continue'}
+          {step === 'after' ? t.symptomCheck.save : t.symptomCheck.continue}
         </button>
         <button type="button" className="button button-quiet button-full" onClick={goBack}>
-          {step === 'activity' ? 'Cancel' : 'Back'}
+          {step === 'activity' ? t.symptomCheck.cancel : t.symptomCheck.back}
         </button>
       </div>
     </div>
   );
 }
 
-function SymptomSliders({ title, values, onChange }) {
+function SymptomSliders({ t, title, values, onChange }) {
   function setSymptom(key, value) {
     onChange({ ...values, [key]: clampScore(value) });
   }
@@ -109,14 +109,14 @@ function SymptomSliders({ title, values, onChange }) {
     <div className="card stack">
       <h3>{title}</h3>
       <p className="fine" style={{ marginTop: '-0.5rem' }}>
-        0 is none, 10 is the most severe you can imagine.
+        {t.symptomCheck.scaleHelp}
       </p>
       <div className="stack">
         {SYMPTOMS.map((symptom) => (
           <div key={symptom.key}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <label className="label" htmlFor={`${symptom.key}-slider`} style={{ marginBottom: 0 }}>
-                {symptom.label}
+                {t.symptoms[symptom.key]}
               </label>
               <span className="muted" style={{ fontVariantNumeric: 'tabular-nums' }}>
                 {values[symptom.key]}

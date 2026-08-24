@@ -1,28 +1,34 @@
-import { getStage } from '../data/stages.js';
 import { recoveryDay, getLatestActivityLog } from '../lib/recovery.js';
 import { listChangedSymptoms, formatDelta } from '../lib/symptoms.js';
+import LanguageToggle from '../components/LanguageToggle.jsx';
 
 export default function Today({
   state,
+  t,
+  language,
+  onLanguageChange,
   onLogActivity,
   onChangeStage,
   onOpenActivityLog,
   onOpenJourney,
   onOpenSummary,
 }) {
-  const stage = getStage(state.currentStage);
+  const stage = t.stages[state.currentStage];
   const day = recoveryDay(state.recoveryStartDate);
   const latest = getLatestActivityLog(state);
   const changed = latest ? listChangedSymptoms(latest.symptomChanges) : [];
 
   return (
     <div className="stack-lg">
-      <header className="stack-sm">
-        <p className="wordmark">Rebound</p>
-        <p className="tagline">
-          Stage {stage?.number} of 6 · {stage?.name}
-        </p>
-      </header>
+      <div className="header-row">
+        <div className="stack-sm">
+          <p className="wordmark">{t.wordmark}</p>
+          <p className="tagline">
+            {t.today.stageOf(state.currentStage)} · {stage?.name}
+          </p>
+        </div>
+        <LanguageToggle language={language} onChange={onLanguageChange} />
+      </div>
 
       <hr className="rule" />
 
@@ -35,22 +41,24 @@ export default function Today({
         </div>
 
         {stage?.examples?.length ? (
-          <p className="fine">Examples: {stage.examples.join(', ')}</p>
+          <p className="fine">
+            {t.today.examples}: {stage.examples.join(', ')}
+          </p>
         ) : null}
 
         <button type="button" className="button button-full" onClick={onLogActivity}>
-          Log today's activity
+          {t.today.logActivity}
         </button>
 
         {day !== null && (
           <p className="fine" style={{ margin: 0 }}>
-            Recovery day {day}. Days are tracked, not used to determine progression.
+            {t.today.recoveryDay(day)}
           </p>
         )}
       </div>
 
       <div className="stack-sm">
-        <h3 style={{ fontSize: 'var(--step-0)' }}>Last logged</h3>
+        <h3 style={{ fontSize: 'var(--step-0)' }}>{t.today.lastLogged}</h3>
         {latest ? (
           <div className="card stack-sm">
             <p className="muted">
@@ -58,29 +66,29 @@ export default function Today({
             </p>
             <p className="fine" style={{ margin: 0 }}>
               {changed.length === 0
-                ? 'No symptom scores changed after this activity.'
-                : `Symptom change: ${changed
-                    .map((item) => `${item.label} ${formatDelta(item.delta)}`)
+                ? t.today.noChange
+                : `${t.today.symptomChange}: ${changed
+                    .map((item) => `${t.symptoms[item.key]} ${formatDelta(item.delta)}`)
                     .join(' · ')}`}
             </p>
           </div>
         ) : (
-          <p className="muted">Nothing logged yet. Your first entry starts the record.</p>
+          <p className="muted">{t.today.noneYet}</p>
         )}
       </div>
 
       <div className="stack-sm">
         <button type="button" className="button button-quiet button-full" onClick={onChangeStage}>
-          Change stage
+          {t.today.changeStage}
         </button>
         <button type="button" className="button button-quiet button-full" onClick={onOpenActivityLog}>
-          View activity log
+          {t.today.viewLog}
         </button>
         <button type="button" className="button button-quiet button-full" onClick={onOpenJourney}>
-          View recovery journey
+          {t.today.viewJourney}
         </button>
         <button type="button" className="button button-quiet button-full" onClick={onOpenSummary}>
-          Doctor conversation summary
+          {t.today.viewSummary}
         </button>
       </div>
     </div>

@@ -8,6 +8,7 @@ const KEY = 'rebound:v1';
 export function createEmptyState() {
   return {
     version: 1,
+    language: 'en',
     recoveryStartDate: null,
     currentStage: 1,
     onboardingAcknowledged: false,
