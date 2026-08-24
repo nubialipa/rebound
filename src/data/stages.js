@@ -6,7 +6,7 @@
 // It does not decide when a person moves between stages.
 
 export const FRAMEWORK = {
-  name: 'CISG Amsterdam 2022 graduated return-to-sport strategy',
+  name: 'CISG Amsterdam 2022 Consensus Statement',
   publicSource: 'CDC HEADS UP',
   publicUrl: 'https://www.cdc.gov/heads-up/guidelines/returning-to-sports.html',
 };
